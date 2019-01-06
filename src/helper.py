@@ -147,6 +147,7 @@ def read_data(doc_dir, num_data=1000, is_test=False):
 
         doc_dir ->  path of document
         num_data -> number of data to read
+        is_test -> if test data, return empty dict for label
 
         Return:
 
@@ -174,8 +175,8 @@ def read_data(doc_dir, num_data=1000, is_test=False):
 
 
 
-def get_f1(test_data, test_label, model,word_index, ngram_models, max_seq_len, 
-            batch_size=1000, shuffle=False, threadhold=(0.3, 0.6), threadhold_step=0.01):
+def get_f1(test_data, test_label, model, word_index, ngram_models, max_seq_len, 
+            batch_size=1000, shuffle=False, threadhold=(0.3, 0.5), threadhold_step=0.01):
     
     test_generator = rnn_data_generator(test_data, test_label, word_index, 
                                     ngram_models, batch_size=batch_size, shuffle=False, 
@@ -191,8 +192,15 @@ def get_f1(test_data, test_label, model,word_index, ngram_models, max_seq_len,
         true_array = np.vstack((true_array, labels))
 
     f1_dict = {}
-    for t in np.arange(threadhold[0], threadhold[1], threadhold_step):
+    for t in np.arange(threadhold[0], threadhold[1]+threadhold_step, threadhold_step):
         f1_dict[t] = f1_score(true_array.argmax(axis=1), (pre_array[:,1] > t).astype(int))
-        print(float(t), f1_dict[t])
+        print(float(t), f1_dict[t], '\t', np.unique(true_array.argmax(axis=1), return_counts=True),
+            '\t', np.unique((pre_array[:,1] > t).astype(int), return_counts=True))
 
     return f1_dict
+
+
+
+
+def get_test_result_csv():
+    pass

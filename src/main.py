@@ -33,6 +33,7 @@ print('\n########## Loading data ##########')
 # Text processing
 train_data_dir = './data/train.csv'
 num_data_read = 10000000
+# num_data_read = 1000
 
 ## Load txt
 start_time = datetime.datetime.now()
@@ -205,6 +206,7 @@ max_seq_len = 100
 lstm_len = 60
 cnn_model_path = './models/cnn_model/'
 batch_size = 10000
+# batch_size = 100
 start_time = datetime.datetime.now()
 
 # split data into test and training set
@@ -230,32 +232,32 @@ cnn_simply_model = cnn_model.simply_cnn()
 
 
 print('\n\n########## Training simply CNN model ##########\n\n')
-cnn_simply_model.summary()
-cnn_simply_model.fit_generator(generator=training_generator,
-                    validation_data=validation_generator,
-                    epochs=10,
-                    steps_per_epoch=(len(cnn_train_data) // batch_size),
-                    validation_steps=(len(cnn_test_data) // batch_size),
-                    use_multiprocessing=False,
-                    workers=1)
+# cnn_simply_model.summary()
+# cnn_simply_model.fit_generator(generator=training_generator,
+#                     validation_data=validation_generator,
+#                     epochs=10,
+#                     steps_per_epoch=(len(cnn_train_data) // batch_size),
+#                     validation_steps=(len(cnn_test_data) // batch_size),
+#                     use_multiprocessing=False,
+#                     workers=1)
 
 
-print('\nTotal time for training model\t', datetime.datetime.now() - start_time)
-cnn_simply_model.save(cnn_model_path+'cnn_simply_model.h5')
-print('Model save to: \n', cnn_model_path+'cnn_simply_model.h5')
+# print('\nTotal time for training model\t', datetime.datetime.now() - start_time)
+# cnn_simply_model.save(cnn_model_path+'cnn_simply_model.h5')
+# print('Model save to: \n', cnn_model_path+'cnn_simply_model.h5')
 
-del training_generator, validation_generator
-
-
+# del training_generator, validation_generator
 
 
-print('\nGetting f1:\n')
-f1_dict = get_f1(cnn_test_data, cnn_test_label, cnn_simply_model, word_index,
-                ngram_models, max_seq_len, batch_size=1000, shuffle=True)
 
 
-print('\nTotal time for calculating f1\t', datetime.datetime.now() - start_time)
-print('F1 score\t', f1_dict)
+# print('\nGetting f1:\n')
+# f1_dict = get_f1(cnn_test_data, cnn_test_label, cnn_simply_model, word_index,
+#                 ngram_models, max_seq_len, batch_size=1000, shuffle=True)
+
+
+# print('\nTotal time for calculating f1\t', datetime.datetime.now() - start_time)
+# print('F1 score\t', f1_dict)
 del cnn_simply_model
 
 
@@ -289,7 +291,7 @@ rnn_simply_lstm_model = rnn_model.simply_rnn_lstm()
 rnn_simply_lstm_model.summary()
 rnn_simply_lstm_model.fit_generator(generator=rnn_training_generator,
                     validation_data=rnn_validation_generator,
-                    epochs=1,
+                    epochs=2,
                     steps_per_epoch=(len(cnn_train_data) // batch_size),
                     validation_steps=(len(cnn_test_data) // batch_size),
                     use_multiprocessing=False,
@@ -325,7 +327,7 @@ rnn_bid_lstm_model = rnn_model.bidrectinal_lstm()
 rnn_bid_lstm_model.summary()
 rnn_bid_lstm_model.fit_generator(generator=rnn_training_generator,
                                 validation_data=rnn_validation_generator,
-                                epochs=1,
+                                epochs=5,
                                 steps_per_epoch=(len(cnn_train_data) // batch_size),
                                 validation_steps=(len(cnn_test_data) // batch_size),
                                 use_multiprocessing=False,
